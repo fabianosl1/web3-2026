@@ -13,27 +13,19 @@ export class Participacao {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ type: 'int' })
   alunoId: number;
 
-  @Column({
-    length: 120,
-  })
+  @Column({ length: 120 })
   titulo: string;
 
-  @Column({
-    type: 'text',
-  })
+  @Column({ type: 'text' })
   descricao: string;
 
-  @Column({
-    type: 'text',
-  })
+  @Column({ type: 'text' })
   atribuicoesPrevistas: string;
 
-  @Column({
-    type: 'int',
-  })
+  @Column({ type: 'int' })
   cargaHorariaPrevista: number;
 
   @Column({

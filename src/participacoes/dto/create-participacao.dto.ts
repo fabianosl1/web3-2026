@@ -9,25 +9,18 @@ import {
 } from 'class-validator';
 
 export class CreateParticipacaoDto {
-  @ApiProperty({
-    example: 15,
-    description: 'ID do aluno autenticado',
-  })
+  @ApiProperty({ example: 15 })
   @IsInt()
   @IsPositive()
   alunoId: number;
 
-  @ApiProperty({
-    example: 'Curso de Informática Básica',
-  })
+  @ApiProperty({ example: 'Curso de Informática Básica' })
   @IsString()
   @IsNotEmpty()
   @MaxLength(120)
   titulo: string;
 
-  @ApiProperty({
-    example: 'Curso oferecido para a comunidade.',
-  })
+  @ApiProperty({ example: 'Curso oferecido para a comunidade.' })
   @IsString()
   @IsNotEmpty()
   descricao: string;
@@ -39,9 +32,7 @@ export class CreateParticipacaoDto {
   @IsNotEmpty()
   atribuicoesPrevistas: string;
 
-  @ApiProperty({
-    example: 40,
-  })
+  @ApiProperty({ example: 40 })
   @IsInt()
   @Min(1)
   cargaHorariaPrevista: number;

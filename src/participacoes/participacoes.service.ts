@@ -1,9 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Participacao } from './entities/participacao.entity';
+import { Repository, Not } from 'typeorm';
 import { CreateParticipacaoDto } from './dto/create-participacao.dto';
 import { UpdateParticipacaoDto } from './dto/update-participacao.dto';
+import { Participacao } from './entities/participacao.entity';
 import { StatusParticipacao } from './enums/status-participacao.enum';
 
 @Injectable()
@@ -14,24 +18,35 @@ export class ParticipacoesService {
   ) {}
 
   async create(createParticipacaoDto: CreateParticipacaoDto): Promise<Participacao> {
-    const participacao = this.participacoesRepository.create(createParticipacaoDto);
+    const participacao = this.participacoesRepository.create({
+      ...createParticipacaoDto,
+      status: StatusParticipacao.EM_ABERTO,
+      ativo: true,
+    });
+
     return this.participacoesRepository.save(participacao);
   }
 
   async findAll(): Promise<Participacao[]> {
     return this.participacoesRepository.find({
-      where: { ativo: true },
+      where: {
+        ativo: true,
+        status: Not(StatusParticipacao.DESATIVADO),
+      },
       order: { criadoEm: 'DESC' },
     });
   }
 
   async findOne(id: string): Promise<Participacao> {
     const participacao = await this.participacoesRepository.findOne({
-      where: { id, ativo: true },
+      where: {
+        id,
+        ativo: true,
+      },
     });
 
     if (!participacao) {
-      throw new NotFoundException('Participação não encontrada');
+      throw new NotFoundException('Participação não encontrada.');
     }
 
     return participacao;
@@ -43,6 +58,18 @@ export class ParticipacoesService {
   ): Promise<Participacao> {
     const participacao = await this.findOne(id);
 
+    if (participacao.status === StatusParticipacao.CONCLUIDO) {
+      throw new BadRequestException(
+        'Não é possível alterar uma participação concluída.',
+      );
+    }
+
+    if (participacao.status === StatusParticipacao.DESATIVADO) {
+      throw new BadRequestException(
+        'Não é possível alterar uma participação desativada.',
+      );
+    }
+
     Object.assign(participacao, updateParticipacaoDto);
 
     return this.participacoesRepository.save(participacao);
@@ -50,6 +77,12 @@ export class ParticipacoesService {
 
   async remove(id: string): Promise<void> {
     const participacao = await this.findOne(id);
+
+    if (participacao.status === StatusParticipacao.CONCLUIDO) {
+      throw new BadRequestException(
+        'Não é possível desativar uma participação concluída.',
+      );
+    }
 
     participacao.ativo = false;
     participacao.status = StatusParticipacao.DESATIVADO;
