@@ -1,0 +1,6 @@
+export enum StatusParticipacao {
+  EM_ABERTO = 'EM_ABERTO',
+  PENDENTE = 'PENDENTE',
+  CONCLUIDO = 'CONCLUIDO',
+  DESATIVADO = 'DESATIVADO',
+}
