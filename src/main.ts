@@ -14,7 +14,7 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
 
-  app.use('/docs', apiReference({ content: document }));
+  app.use('/docs', apiReference({ content: document, layout: 'classic' }));
 
   await app.listen(process.env.PORT ?? 3000);
 }

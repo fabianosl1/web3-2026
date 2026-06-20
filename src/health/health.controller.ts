@@ -1,10 +1,13 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { HealthResponse } from './dtos/health.response';
+import { HealthService } from './health.service';
 
 @ApiTags('Health')
 @Controller('/health')
 export class HealthController {
+  constructor(private readonly healthService: HealthService) {}
+
   @ApiOperation({
     description: 'Indica se o serviço está online ',
     summary: 'Status do serviço',
@@ -12,8 +15,6 @@ export class HealthController {
   @ApiOkResponse({ type: HealthResponse })
   @Get()
   health() {
-    const health = new HealthResponse();
-    health.status = 'ok';
-    return health;
+    return this.healthService.health();
   }
 }
