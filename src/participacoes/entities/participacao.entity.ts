@@ -11,38 +11,38 @@ import { StatusParticipacao } from '../enums/status-participacao.enum';
 @Entity('participacoes')
 export class Participacao {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column()
-  alunoId: string;
+  alunoId!: string;
 
   @Column({ length: 120 })
-  titulo: string;
+  titulo!: string;
 
   @Column({ type: 'text' })
-  descricao: string;
+  descricao!: string;
 
   @Column({ type: 'text' })
-  atribuicoesPrevistas: string;
+  atribuicoesPrevistas!: string;
 
   @Column({ type: 'int' })
-  cargaHorariaPrevista: number;
+  cargaHorariaPrevista!: number;
 
   @Column({
     type: 'enum',
     enum: StatusParticipacao,
     default: StatusParticipacao.EM_ABERTO,
   })
-  status: StatusParticipacao;
+  status!: StatusParticipacao;
 
   @Column({ default: true })
-  ativo: boolean;
+  ativo!: boolean;
 
   @CreateDateColumn()
-  criadoEm: Date;
+  criadoEm!: Date;
 
   @UpdateDateColumn()
-  atualizadoEm: Date;
+  atualizadoEm!: Date;
 
   @DeleteDateColumn()
   deletadoEm?: Date;

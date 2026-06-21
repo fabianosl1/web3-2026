@@ -11,35 +11,35 @@ import { StatusIntegralizacao } from '../enums/status-integralizacao.enum';
 @Entity('integralizacoes')
 export class Integralizacao {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column()
-  participacaoId: string;
+  participacaoId!: string;
 
   @Column()
-  alunoId: string;
+  alunoId!: string;
 
   @Column({ type: 'int' })
-  cargaHorariaReal: number;
+  cargaHorariaReal!: number;
 
   @Column()
-  certificadoPdf: string;
+  certificadoPdf!: string;
 
   @Column({
     type: 'enum',
     enum: StatusIntegralizacao,
     default: StatusIntegralizacao.EM_ABERTO,
   })
-  status: StatusIntegralizacao;
+  status!: StatusIntegralizacao;
 
   @Column({ default: true })
-  ativo: boolean;
+  ativo!: boolean;
 
   @CreateDateColumn()
-  criadoEm: Date;
+  criadoEm!: Date;
 
   @UpdateDateColumn()
-  atualizadoEm: Date;
+  atualizadoEm!: Date;
 
   @DeleteDateColumn()
   deletadoEm?: Date;
