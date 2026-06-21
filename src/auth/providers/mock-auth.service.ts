@@ -26,6 +26,6 @@ export class MockAuthService implements AuthProvider {
   }
 
   health(): Promise<HealthStatus> {
-    return Promise.resolve(HealthStatus.DOWN);
+    return Promise.resolve(HealthStatus.OK);
   }
 }
