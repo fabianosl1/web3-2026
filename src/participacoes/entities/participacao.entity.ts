@@ -13,8 +13,8 @@ export class Participacao {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'int' })
-  alunoId: number;
+  @Column()
+  alunoId: string;
 
   @Column({ length: 120 })
   titulo: string;

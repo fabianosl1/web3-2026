@@ -1,24 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsInt,
-  IsNotEmpty,
-  IsPositive,
-  IsString,
-  MaxLength,
-  Min,
-} from 'class-validator';
+import { IsInt, IsNotEmpty, IsString, MaxLength, Min } from 'class-validator';
 
 export class CreateParticipacaoDto {
-  // TODO:
-  // O alunoId será obtido do token JWT enviado pelo Módulo A.
-  // Temporariamente ele está sendo recebido pelo DTO.
-  
-  @ApiProperty({ example: 15 })
-  @IsInt()
-  @IsPositive()
-
-  alunoId: number;
-
   @ApiProperty({ example: 'Curso de Informática Básica' })
   @IsString()
   @IsNotEmpty()

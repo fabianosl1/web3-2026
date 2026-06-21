@@ -16,6 +16,8 @@ import {
 import { ParticipacoesService } from './participacoes.service';
 import { CreateParticipacaoDto } from './dto/create-participacao.dto';
 import { UpdateParticipacaoDto } from './dto/update-participacao.dto';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorrator';
+import { User } from 'src/auth/entities/user';
 
 @ApiTags('Participações')
 @Controller('participacoes')
@@ -27,8 +29,11 @@ export class ParticipacoesController {
     description: 'Participação cadastrada com sucesso.',
   })
   @Post()
-  create(@Body() createParticipacaoDto: CreateParticipacaoDto) {
-    return this.participacoesService.create(createParticipacaoDto);
+  create(
+    @Body() createParticipacaoDto: CreateParticipacaoDto,
+    @CurrentUser() user: User,
+  ) {
+    return this.participacoesService.create(createParticipacaoDto, user);
   }
 
   @ApiOperation({ summary: 'Listar participações cadastradas' })

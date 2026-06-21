@@ -9,6 +9,7 @@ import { CreateParticipacaoDto } from './dto/create-participacao.dto';
 import { UpdateParticipacaoDto } from './dto/update-participacao.dto';
 import { Participacao } from './entities/participacao.entity';
 import { StatusParticipacao } from './enums/status-participacao.enum';
+import { User } from 'src/auth/entities/user';
 
 @Injectable()
 export class ParticipacoesService {
@@ -17,9 +18,13 @@ export class ParticipacoesService {
     private readonly participacoesRepository: Repository<Participacao>,
   ) {}
 
-  async create(createParticipacaoDto: CreateParticipacaoDto): Promise<Participacao> {
+  async create(
+    createParticipacaoDto: CreateParticipacaoDto,
+    user: User,
+  ): Promise<Participacao> {
     const participacao = this.participacoesRepository.create({
       ...createParticipacaoDto,
+      alunoId: user.id,
       status: StatusParticipacao.EM_ABERTO,
       ativo: true,
     });

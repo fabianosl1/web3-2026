@@ -1,12 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { HealthStatus } from '../enums/health-status.enum';
+import { HealthComponentResponse } from './health-component.response';
 
 export class HealthResponse {
   @ApiProperty({ description: 'status do serviço' })
-  status: 'ok' | 'partial';
+  status: HealthStatus;
 
-  @ApiProperty({ description: 'status do banco de dados' })
-  database_status: 'ok' | 'down';
-
-  @ApiProperty({ description: 'tempo de resposta do banco' })
-  response_time: string;
+  @ApiProperty({ description: 'status dos componentes' })
+  components: HealthComponentResponse[];
 }

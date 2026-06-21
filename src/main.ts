@@ -19,6 +19,8 @@ async function bootstrap() {
     .setTitle('Web 3 - 2026')
     .setDescription('Modulo para o trabalho de web 3')
     .setVersion('1.0')
+    .addBearerAuth({ type: 'http', scheme: 'bearer' }, 'jwt')
+    .addSecurityRequirements('jwt')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
