@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeormConfig } from './configs/typeorm.config';
 import { ParticipacoesModule } from './participacoes/participacoes.module';
 import { IntegralizacoesModule } from './integralizacoes/integralizacao.module';
+import { ArquivosModule } from './arquivos/arquivos.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/guards/auth.guard';
@@ -17,6 +18,7 @@ import { AuthGuard } from './auth/guards/auth.guard';
     HealthModule,
     ParticipacoesModule,
     IntegralizacoesModule,
+    ArquivosModule,
   ],
   providers: [
     {

@@ -6,6 +6,9 @@ export class HealthResponse {
   @ApiProperty({ description: 'status do serviço' })
   status: HealthStatus;
 
-  @ApiProperty({ description: 'status dos componentes' })
+  @ApiProperty({
+    description: 'status dos componentes',
+    type: [HealthComponentResponse],
+  })
   components: HealthComponentResponse[];
 }
