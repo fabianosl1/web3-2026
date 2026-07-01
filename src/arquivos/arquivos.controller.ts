@@ -1,43 +1,13 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Res,
-  StreamableFile,
-} from '@nestjs/common';
-import {
-  ApiCreatedResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
+import { Controller, Get, Param, Res, StreamableFile } from '@nestjs/common';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
 import { ArquivosService } from './arquivos.service';
-import { CreateArquivoDto } from './dto/create-arquivo.dto';
 import { ArquivoResponse } from './dto/arquivo.response';
-import { CurrentUser } from 'src/auth/decorators/current-user.decorrator';
-import { User } from 'src/auth/entities/user';
 
 @ApiTags('Arquivos')
 @Controller('arquivos')
 export class ArquivosController {
   constructor(private readonly arquivosService: ArquivosService) {}
-
-  @ApiOperation({ summary: 'Salvar um arquivo (conteúdo em base64)' })
-  @ApiCreatedResponse({
-    description: 'Arquivo salvo com sucesso.',
-    type: ArquivoResponse,
-  })
-  @Post()
-  async create(
-    @Body() createArquivoDto: CreateArquivoDto,
-    @CurrentUser() user: User,
-  ): Promise<ArquivoResponse> {
-    const arquivo = await this.arquivosService.create(createArquivoDto, user);
-    return ArquivoResponse.fromEntity(arquivo);
-  }
 
   @ApiOperation({ summary: 'Buscar os metadados de um arquivo pelo ID' })
   @ApiOkResponse({

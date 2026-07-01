@@ -28,6 +28,9 @@ export class Participacao {
   @Column({ type: 'int' })
   cargaHorariaPrevista!: number;
 
+  @Column({ nullable: true })
+  arquivoId?: string;
+
   @Column({
     type: 'enum',
     enum: StatusParticipacao,

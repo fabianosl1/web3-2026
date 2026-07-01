@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 
 import {
   ApiCreatedResponse,
@@ -21,6 +14,8 @@ import { UpdateIntegralizacaoDto } from './dto/update-integralizacao.dto';
 
 import { CurrentUser } from 'src/auth/decorators/current-user.decorrator';
 import { User } from 'src/auth/entities/user';
+import { CreateArquivoDto } from 'src/arquivos/dto/create-arquivo.dto';
+import { ArquivoResponse } from 'src/arquivos/dto/arquivo.response';
 
 @ApiTags('Integralizações')
 @Controller('integralizacoes')
@@ -40,10 +35,28 @@ export class IntegralizacoesController {
     @Body() createIntegralizacaoDto: CreateIntegralizacaoDto,
     @CurrentUser() user: User,
   ) {
-    return this.integralizacoesService.create(
-      createIntegralizacaoDto,
+    return this.integralizacoesService.create(createIntegralizacaoDto, user);
+  }
+
+  @ApiOperation({
+    summary: 'Anexar um arquivo (conteúdo em base64) a uma integralização',
+  })
+  @ApiCreatedResponse({
+    description: 'Arquivo anexado com sucesso.',
+    type: ArquivoResponse,
+  })
+  @Post(':id/arquivo')
+  async anexarArquivo(
+    @Param('id') id: string,
+    @Body() createArquivoDto: CreateArquivoDto,
+    @CurrentUser() user: User,
+  ): Promise<ArquivoResponse> {
+    const arquivo = await this.integralizacoesService.anexarArquivo(
+      id,
+      createArquivoDto,
       user,
     );
+    return ArquivoResponse.fromEntity(arquivo);
   }
 
   @ApiOperation({
@@ -80,9 +93,6 @@ export class IntegralizacoesController {
     @Body()
     updateIntegralizacaoDto: UpdateIntegralizacaoDto,
   ) {
-    return this.integralizacoesService.update(
-      id,
-      updateIntegralizacaoDto,
-    );
+    return this.integralizacoesService.update(id, updateIntegralizacaoDto);
   }
 }

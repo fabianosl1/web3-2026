@@ -1,10 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsInt,
-  IsNotEmpty,
-  IsString,
-  Min,
-} from 'class-validator';
+import { IsInt, IsNotEmpty, IsString, Min } from 'class-validator';
 
 export class CreateIntegralizacaoDto {
   @ApiProperty({
@@ -20,11 +15,4 @@ export class CreateIntegralizacaoDto {
   @IsInt()
   @Min(1)
   cargaHorariaReal: number;
-
-  @ApiProperty({
-    example: 'certificado.pdf',
-  })
-  @IsString()
-  @IsNotEmpty()
-  certificadoPdf: string;
 }

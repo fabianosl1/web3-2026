@@ -18,6 +18,8 @@ import { CreateParticipacaoDto } from './dto/create-participacao.dto';
 import { UpdateParticipacaoDto } from './dto/update-participacao.dto';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorrator';
 import { User } from 'src/auth/entities/user';
+import { CreateArquivoDto } from 'src/arquivos/dto/create-arquivo.dto';
+import { ArquivoResponse } from 'src/arquivos/dto/arquivo.response';
 
 @ApiTags('Participações')
 @Controller('participacoes')
@@ -34,6 +36,27 @@ export class ParticipacoesController {
     @CurrentUser() user: User,
   ) {
     return this.participacoesService.create(createParticipacaoDto, user);
+  }
+
+  @ApiOperation({
+    summary: 'Anexar um arquivo (conteúdo em base64) a uma participação',
+  })
+  @ApiCreatedResponse({
+    description: 'Arquivo anexado com sucesso.',
+    type: ArquivoResponse,
+  })
+  @Post(':id/arquivo')
+  async anexarArquivo(
+    @Param('id') id: string,
+    @Body() createArquivoDto: CreateArquivoDto,
+    @CurrentUser() user: User,
+  ): Promise<ArquivoResponse> {
+    const arquivo = await this.participacoesService.anexarArquivo(
+      id,
+      createArquivoDto,
+      user,
+    );
+    return ArquivoResponse.fromEntity(arquivo);
   }
 
   @ApiOperation({ summary: 'Listar participações cadastradas' })

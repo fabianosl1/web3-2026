@@ -3,9 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ParticipacoesService } from './participacoes.service';
 import { ParticipacoesController } from './participacoes.controller';
 import { Participacao } from './entities/participacao.entity';
+import { ArquivosModule } from '../arquivos/arquivos.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Participacao])],
+  imports: [TypeOrmModule.forFeature([Participacao]), ArquivosModule],
   controllers: [ParticipacoesController],
   providers: [ParticipacoesService],
   exports: [ParticipacoesService],

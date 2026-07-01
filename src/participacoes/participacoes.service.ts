@@ -10,12 +10,16 @@ import { UpdateParticipacaoDto } from './dto/update-participacao.dto';
 import { Participacao } from './entities/participacao.entity';
 import { StatusParticipacao } from './enums/status-participacao.enum';
 import { User } from 'src/auth/entities/user';
+import { ArquivosService } from '../arquivos/arquivos.service';
+import { CreateArquivoDto } from '../arquivos/dto/create-arquivo.dto';
+import { Arquivo } from '../arquivos/entities/arquivo.entity';
 
 @Injectable()
 export class ParticipacoesService {
   constructor(
     @InjectRepository(Participacao)
     private readonly participacoesRepository: Repository<Participacao>,
+    private readonly arquivosService: ArquivosService,
   ) {}
 
   async create(
@@ -78,6 +82,27 @@ export class ParticipacoesService {
     Object.assign(participacao, updateParticipacaoDto);
 
     return this.participacoesRepository.save(participacao);
+  }
+
+  async anexarArquivo(
+    id: string,
+    createArquivoDto: CreateArquivoDto,
+    user: User,
+  ): Promise<Arquivo> {
+    const participacao = await this.findOne(id);
+
+    if (participacao.alunoId !== user.id) {
+      throw new BadRequestException(
+        'Você não pode anexar um arquivo em uma participação de outro aluno.',
+      );
+    }
+
+    const arquivo = await this.arquivosService.create(createArquivoDto, user);
+
+    participacao.arquivoId = arquivo.id;
+    await this.participacoesRepository.save(participacao);
+
+    return arquivo;
   }
 
   async remove(id: string): Promise<void> {

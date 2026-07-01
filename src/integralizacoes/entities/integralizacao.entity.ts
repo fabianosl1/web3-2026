@@ -22,8 +22,8 @@ export class Integralizacao {
   @Column({ type: 'int' })
   cargaHorariaReal!: number;
 
-  @Column()
-  certificadoPdf!: string;
+  @Column({ nullable: true })
+  arquivoId?: string;
 
   @Column({
     type: 'enum',
