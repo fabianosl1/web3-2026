@@ -1,53 +1,51 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { firstValueFrom } from 'rxjs';
 
 import { AuthProvider } from '../auth.provider';
 import { User } from '../entities/user';
+import { HealthStatus } from 'src/health/enums/health-status.enum';
 import { Role } from '../enums/role.enum';
-import { HealthStatus } from '../../health/enums/health-status.enum';
 
 @Injectable()
 export class ApiAuthService implements AuthProvider {
+  private endpoint = 'https://api-web-x0ca.onrender.com';
 
-    constructor(
-        private readonly http: HttpService,
-    ) {}
+  constructor(private readonly http: HttpService) {}
 
-    async validate(token: string): Promise<User> {
+  async validate(token: string): Promise<User> {
+    const response = await fetch(this.endpoint + '/api/auth/validar', {
+      method: 'POST',
+      body: JSON.stringify({ token }),
+    });
 
-        const response = await firstValueFrom(
-            this.http.post(
-                'http://localhost:8081/api/auth/validar',
-                { token }
-            )
-        );
+    if (!response.ok) throw new BadRequestException();
 
-        const data = response.data;
+    const json = (await response.json()) as ValidateResponse;
 
-        if (!data.valido) {
-            throw new UnauthorizedException(data.motivo);
-        }
+    const user = new User();
 
-        if (data.status !== 'ATIVO') {
-            throw new UnauthorizedException('Usuário desativado.');
-        }
+    user.id = json.usuarioId.toString();
+    user.email = json.email;
+    user.name = json.nome;
+    user.role = json.perfil == 'ALUNO' ? Role.ALUNO : Role.COMISSAO;
 
-        const user = new User();
+    return user;
+  }
 
-        user.id = data.usuarioId;
-        user.name = data.nome;
-        user.email = data.email;
+  async health(): Promise<HealthStatus> {
+    const response = await fetch(this.endpoint);
 
-        user.role =
-            data.perfil === 'COMISSAO'
-                ? Role.COMISSAO
-                : Role.ALUNO;
+    if (response.status === 401) return HealthStatus.OK;
 
-        return user;
-    }
-
-    async health() {
-        return HealthStatus.OK;
-    }
+    return HealthStatus.DOWN;
+  }
 }
+
+type ValidateResponse = {
+  valido: boolean;
+  usuarioId: number;
+  nome: string;
+  email: string;
+  perfil: string;
+  status: string;
+};
