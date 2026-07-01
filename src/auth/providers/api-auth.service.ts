@@ -15,6 +15,9 @@ export class ApiAuthService implements AuthProvider {
   async validate(token: string): Promise<User> {
     const response = await fetch(this.endpoint + '/api/auth/validar', {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({ token }),
     });
 
@@ -33,7 +36,9 @@ export class ApiAuthService implements AuthProvider {
   }
 
   async health(): Promise<HealthStatus> {
-    const response = await fetch(this.endpoint);
+    const response = await fetch(this.endpoint, {
+      headers: { 'Content-Type': 'application/json' },
+    });
 
     if (response.status === 401) return HealthStatus.OK;
 
